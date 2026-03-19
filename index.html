@@ -121,10 +121,10 @@
 
                 <div>
                     <div class="flex justify-between text-xs mb-1">
-                        <label class="text-gray-400">Padding / Gap</label>
-                        <span id="valPadding" class="text-blue-400 font-mono">2px</span>
+                        <label class="text-gray-400">Gap</label>
+                        <span id="valGap" class="text-blue-400 font-mono">2px</span>
                     </div>
-                    <input type="range" id="padding" min="0" max="20" value="2" class="w-full accent-blue-500">
+                    <input type="range" id="gap" min="0" max="20" value="2" class="w-full accent-blue-500">
                 </div>
             </div>
 
@@ -226,7 +226,7 @@
             height: 600,
             weighting: 'area',
             sorting: 'desc',
-            padding: 2,
+            gap: 2,
             rotation: 0,
             bookCover: 0
         };
@@ -259,7 +259,7 @@
 
         bindSlider('containerWidth', 'width', 'valWidth');
         bindSlider('containerHeight', 'height', 'valHeight');
-        bindSlider('padding', 'padding', 'valPadding');
+        bindSlider('gap', 'gap', 'valGap');
         bindSlider('rotation', 'rotation', 'valRotation', '°');
         bindSlider('bookCover', 'bookCover', 'valBookCover', '%');
         
@@ -343,8 +343,8 @@
                 normalizedWeight: (item.weight / totalWeight) * totalArea
             }));
 
-            // 4. Run Justified Algorithm (Defaulted)
-            calculatedLayout = justifiedGallery(processingItems, 0, 0, state.width, state.height);
+            // 4. Run Justified Algorithm (Defaulted) passing the gap size
+            calculatedLayout = justifiedGallery(processingItems, 0, 0, state.width, state.height, state.gap);
 
             // 5. Render
             renderLayout(calculatedLayout);
@@ -352,7 +352,7 @@
 
         // --- Layout Algorithms ---
         // Justified Gallery (Preserves Aspect Ratios - Used by Flickr/Google Photos)
-        function justifiedGallery(items, x, y, w, h) {
+        function justifiedGallery(items, x, y, w, h, gap = 0) {
             let layout = [];
             let currentY = y;
             let row = [];
@@ -365,16 +365,20 @@
                 i++;
                 
                 let aspectSum = row.reduce((sum, r) => sum + r.aspect, 0);
-                let rowHeight = w / aspectSum;
+                
+                // Calculate available width for images by subtracting the total gap width needed for this row
+                let gapWidth = Math.max(0, (row.length - 1) * gap);
+                let availableWidth = Math.max(1, w - gapWidth);
+                let rowHeight = availableWidth / aspectSum;
                 
                 if (rowHeight < h * 0.5 || i === items.length) {
                     let currentX = x;
                     row.forEach(r => {
                         let rWidth = rowHeight * r.aspect;
                         layout.push({ ...r, x: currentX, y: currentY, w: rWidth, h: rowHeight });
-                        currentX += rWidth;
+                        currentX += rWidth + gap;
                     });
-                    currentY += rowHeight;
+                    currentY += rowHeight + gap;
                     row = []; 
                 }
             }
@@ -414,20 +418,13 @@
                 const el = document.createElement('div');
                 el.className = 'rect-item absolute group';
                 
-                const p = state.padding;
-                const innerW = Math.max(0, rect.w - p);
-                const innerH = Math.max(0, rect.h - p);
-
                 el.style.left = `${rect.x}px`;
                 el.style.top = `${rect.y}px`;
                 el.style.width = `${rect.w}px`;
                 el.style.height = `${rect.h}px`;
                 
                 const inner = document.createElement('div');
-                inner.style.width = `${innerW}px`;
-                inner.style.height = `${innerH}px`;
-                inner.style.margin = `${p/2}px`;
-                // If it's pure color, keep grey bg, otherwise transparent for images (for PNG padding transparency)
+                // Use exact calculated w/h without artificial CSS padding margins
                 inner.className = `relative w-full h-full rounded shadow-sm overflow-hidden ${rect.type === 'color' ? 'bg-gray-800' : ''} transition-transform duration-200 hover:scale-[1.02] hover:z-10 hover:shadow-lg border border-gray-700/50`;
 
                 if (rect.type === 'image') {
@@ -555,14 +552,12 @@
             ctx.scale(scaleFactor, scaleFactor);
             ctx.translate(-state.width / 2, -exportHeight / 2);
 
-            const p = state.padding;
-
             // Render each layout element precisely to canvas in their unrotated block format
             calculatedLayout.forEach(rect => {
-                const innerW = Math.max(0, rect.w - p);
-                const innerH = Math.max(0, rect.h - p);
-                const drawX = rect.x + p / 2;
-                const drawY = rect.y + p / 2;
+                const innerW = rect.w;
+                const innerH = rect.h;
+                const drawX = rect.x;
+                const drawY = rect.y;
 
                 if (rect.type === 'image' && rect.imgElement) {
                     if (format === 'image/jpeg') {
