@@ -138,6 +138,14 @@
                 
                 <div>
                     <div class="flex justify-between text-xs mb-1">
+                        <label class="text-gray-400">Background Color</label>
+                        <span id="valBgColor" class="text-blue-400 font-mono">#1F2937</span>
+                    </div>
+                    <input type="color" id="bgColor" value="#1f2937" class="w-full h-8 cursor-pointer bg-gray-900 border border-gray-700 rounded p-1">
+                </div>
+
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
                         <label class="text-gray-400">Block Rotation</label>
                         <span id="valRotation" class="text-blue-400 font-mono">0°</span>
                     </div>
@@ -146,27 +154,18 @@
 
                 <div>
                     <div class="flex justify-between text-xs mb-1">
+                        <label class="text-gray-400">Corner Radius</label>
+                        <span id="valRadius" class="text-blue-400 font-mono">0px</span>
+                    </div>
+                    <input type="range" id="radius" min="0" max="50" value="0" class="w-full accent-blue-500">
+                </div>
+
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
                         <label class="text-gray-400">Book Cover Spine Width</label>
                         <span id="valBookCover" class="text-blue-400 font-mono">0%</span>
                     </div>
                     <input type="range" id="bookCover" min="0" max="100" value="0" class="w-full accent-blue-500">
-                </div>
-            </div>
-
-            <hr class="border-gray-700">
-
-            <!-- Export Actions -->
-            <div class="space-y-3">
-                <h3 class="text-sm font-semibold text-gray-300 uppercase tracking-wider flex items-center gap-2">
-                    <i data-lucide="download" class="w-4 h-4"></i> Export
-                </h3>
-                <div class="flex gap-2 pb-4">
-                    <button id="btnExportJPG" class="flex-1 bg-gray-700 hover:bg-blue-600 text-white text-xs py-2 px-3 rounded flex items-center justify-center transition-colors">
-                        .JPG (Filled)
-                    </button>
-                    <button id="btnExportPNG" class="flex-1 bg-gray-700 hover:bg-blue-600 text-white text-xs py-2 px-3 rounded flex items-center justify-center transition-colors">
-                        .PNG (Transparent)
-                    </button>
                 </div>
             </div>
         </div>
@@ -178,7 +177,7 @@
         <div id="canvasContainer" class="flex-1 overflow-auto grid p-8" style="place-content: center safe;">
             <!-- scaleWrapper matches the exact physical bounds of the zoomed canvas so scrollbars activate perfectly -->
             <div id="scaleWrapper" class="transition-all duration-200 relative shrink-0" style="width: 800px; height: 600px;">
-                <div id="renderCanvas" class="bg-gray-800 shadow-2xl absolute top-0 left-0 overflow-hidden ring-1 ring-gray-700 transition-transform duration-200" style="width: 800px; height: 600px; transform-origin: top left;">
+                <div id="renderCanvas" class="shadow-2xl absolute top-0 left-0 overflow-hidden ring-1 ring-gray-700 transition-transform duration-200" style="width: 800px; height: 600px; transform-origin: top left; background-color: #1f2937;">
                     <!-- Rectangles injected here via gridWrapper -->
                     <div class="absolute inset-0 flex items-center justify-center text-gray-500 text-sm italic empty-state z-50 pointer-events-none">
                         Upload images or generate mock blocks to begin...
@@ -194,22 +193,32 @@
             <button id="btnZoomIn" class="p-1.5 hover:bg-gray-700 rounded text-gray-400 hover:text-white transition-colors" title="Zoom In"><i data-lucide="zoom-in" class="w-4 h-4"></i></button>
         </div>
 
-        <!-- Metrics Footer -->
-        <footer class="bg-gray-900 border-t border-gray-800 p-4 flex gap-8 text-sm px-6">
-            <div class="flex items-center gap-2">
-                <i data-lucide="layers" class="w-4 h-4 text-gray-500"></i>
-                <span class="text-gray-400">Items:</span>
-                <span id="metricCount" class="font-mono text-white">0</span>
+        <!-- Metrics & Export Footer -->
+        <footer class="bg-gray-900 border-t border-gray-800 p-4 flex justify-between items-center text-sm px-6">
+            <div class="flex gap-8">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="layers" class="w-4 h-4 text-gray-500"></i>
+                    <span class="text-gray-400">Items:</span>
+                    <span id="metricCount" class="font-mono text-white">0</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <i data-lucide="box" class="w-4 h-4 text-gray-500"></i>
+                    <span class="text-gray-400">Layout Height:</span>
+                    <span id="metricSpace" class="font-mono text-blue-400">Dynamic Height (Justified)</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <i data-lucide="scaling" class="w-4 h-4 text-gray-500"></i>
+                    <span class="text-gray-400">Worst Aspect Ratio:</span>
+                    <span id="metricRatio" class="font-mono text-white">N/A</span>
+                </div>
             </div>
-            <div class="flex items-center gap-2">
-                <i data-lucide="box" class="w-4 h-4 text-gray-500"></i>
-                <span class="text-gray-400">Layout Height:</span>
-                <span id="metricSpace" class="font-mono text-blue-400">Dynamic Height (Justified)</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <i data-lucide="scaling" class="w-4 h-4 text-gray-500"></i>
-                <span class="text-gray-400">Worst Aspect Ratio:</span>
-                <span id="metricRatio" class="font-mono text-white">N/A</span>
+            <div class="flex gap-2">
+                <button id="btnExportJPG" class="bg-gray-700 hover:bg-blue-600 text-white text-xs py-2 px-4 rounded flex items-center justify-center transition-colors shadow-md">
+                    <i data-lucide="download" class="w-3 h-3 mr-2"></i> .JPG (Filled)
+                </button>
+                <button id="btnExportPNG" class="bg-gray-700 hover:bg-blue-600 text-white text-xs py-2 px-4 rounded flex items-center justify-center transition-colors shadow-md">
+                    <i data-lucide="download" class="w-3 h-3 mr-2"></i> .PNG (Transparent)
+                </button>
             </div>
         </footer>
     </main>
@@ -227,7 +236,9 @@
             weighting: 'area',
             sorting: 'desc',
             gap: 2,
+            backgroundColor: '#1f2937',
             rotation: 0,
+            borderRadius: 0,
             bookCover: 0
         };
 
@@ -257,11 +268,24 @@
             });
         };
 
+        const bindColor = (id, stateKey, labelId) => {
+            const el = document.getElementById(id);
+            const label = document.getElementById(labelId);
+            el.addEventListener('input', (e) => {
+                state[stateKey] = e.target.value;
+                label.textContent = e.target.value.toUpperCase();
+                canvas.style.backgroundColor = state[stateKey];
+            });
+        };
+
         bindSlider('containerWidth', 'width', 'valWidth');
         bindSlider('containerHeight', 'height', 'valHeight');
         bindSlider('gap', 'gap', 'valGap');
         bindSlider('rotation', 'rotation', 'valRotation', '°');
+        bindSlider('radius', 'borderRadius', 'valRadius');
         bindSlider('bookCover', 'bookCover', 'valBookCover', '%');
+        
+        bindColor('bgColor', 'backgroundColor', 'valBgColor');
         
         bindSelect('weighting', 'weighting');
         bindSelect('sorting', 'sorting');
@@ -343,7 +367,7 @@
                 normalizedWeight: (item.weight / totalWeight) * totalArea
             }));
 
-            // 4. Run Justified Algorithm (Defaulted) passing the gap size
+            // 4. Run Justified Algorithm passing the gap size
             calculatedLayout = justifiedGallery(processingItems, 0, 0, state.width, state.height, state.gap);
 
             // 5. Render
@@ -425,7 +449,8 @@
                 
                 const inner = document.createElement('div');
                 // Use exact calculated w/h without artificial CSS padding margins
-                inner.className = `relative w-full h-full rounded shadow-sm overflow-hidden ${rect.type === 'color' ? 'bg-gray-800' : ''} transition-transform duration-200 hover:scale-[1.02] hover:z-10 hover:shadow-lg border border-gray-700/50`;
+                inner.style.borderRadius = `${state.borderRadius}px`;
+                inner.className = `relative w-full h-full shadow-sm overflow-hidden ${rect.type === 'color' ? 'bg-gray-800' : ''} transition-transform duration-200 hover:scale-[1.02] hover:z-10 hover:shadow-lg border border-gray-700/50`;
 
                 if (rect.type === 'image') {
                     const imgContainer = document.createElement('div');
@@ -534,7 +559,7 @@
 
             // Background Fill (Solid for JPEG, Clear for PNG for transparent padding)
             if (format === 'image/jpeg') {
-                ctx.fillStyle = '#1f2937'; 
+                ctx.fillStyle = state.backgroundColor; 
                 ctx.fillRect(0, 0, state.width, exportHeight);
             } else {
                 ctx.clearRect(0, 0, state.width, exportHeight);
@@ -559,16 +584,23 @@
                 const drawX = rect.x;
                 const drawY = rect.y;
 
+                ctx.save();
+                
+                // Establish clipping path for border radius
+                ctx.beginPath();
+                const maxRadius = Math.min(innerW / 2, innerH / 2, state.borderRadius);
+                if (ctx.roundRect) {
+                    ctx.roundRect(drawX, drawY, innerW, innerH, maxRadius);
+                } else {
+                    ctx.rect(drawX, drawY, innerW, innerH);
+                }
+                ctx.clip();
+
                 if (rect.type === 'image' && rect.imgElement) {
                     if (format === 'image/jpeg') {
-                        ctx.fillStyle = '#1f2937';
+                        ctx.fillStyle = state.backgroundColor;
                         ctx.fillRect(drawX, drawY, innerW, innerH);
                     } // Left empty for PNG to keep padding/letterbox transparent!
-
-                    ctx.save();
-                    ctx.beginPath();
-                    ctx.rect(drawX, drawY, innerW, innerH);
-                    ctx.clip(); 
 
                     // With Justified layout, images perfectly fit the calculated bounds natively
                     const renderW = innerW;
@@ -577,16 +609,14 @@
                     const renderY = drawY;
 
                     ctx.drawImage(rect.imgElement, renderX, renderY, renderW, renderH);
-                    ctx.restore();
 
                 } else {
                     ctx.fillStyle = rect.color || '#374151';
                     ctx.fillRect(drawX, drawY, innerW, innerH);
                 }
 
-                // Render Dynamic Book Cover
+                // Render Dynamic Book Cover inside the same clipped area
                 if (state.bookCover > 0) {
-                    ctx.save();
                     const w = state.bookCover / 100;
                     
                     const grad1 = ctx.createLinearGradient(drawX, drawY, drawX + innerW, drawY);
@@ -603,9 +633,9 @@
                     grad2.addColorStop(Math.min(1, w * 0.4), 'rgba(0,0,0,0)');
                     ctx.fillStyle = grad2;
                     ctx.fillRect(drawX, drawY, innerW, innerH);
-                    
-                    ctx.restore();
                 }
+
+                ctx.restore(); // Drop the clip path for the next rectangle
             });
 
             ctx.restore(); // Restore global context transformation
