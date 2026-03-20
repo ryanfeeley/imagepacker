@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* Custom scrollbar for a polished look */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #1f2937; }
         ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
@@ -21,24 +20,18 @@
             background-size: 20px 20px;
             background-position: 0 0, 10px 10px;
         }
-
-        .rect-item {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow: hidden;
-            box-sizing: border-box;
-        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 h-screen flex overflow-hidden font-sans">
 
     <!-- Sidebar Controls -->
-    <aside class="w-80 bg-gray-800 border-r border-gray-700 flex flex-col h-full z-10 shadow-xl shrink-0">
+    <aside class="w-[340px] bg-gray-800 border-r border-gray-700 flex flex-col h-full z-10 shadow-xl shrink-0">
         <div class="p-5 border-b border-gray-700">
             <h1 class="text-xl font-bold flex items-center gap-2 text-white">
                 <i data-lucide="layout-dashboard" class="w-6 h-6 text-blue-400"></i>
                 Treemap Engine
             </h1>
-            <p class="text-xs text-gray-400 mt-1">Perfect space-filling packing prototype</p>
+            <p class="text-xs text-gray-400 mt-1">Justified packing prototype</p>
         </div>
 
         <div class="p-5 flex-1 overflow-y-auto space-y-6">
@@ -49,18 +42,14 @@
                 </h3>
                 
                 <div>
-                    <label class="block text-xs text-gray-400 mb-1">Load Local Images</label>
                     <input type="file" id="fileInput" multiple accept="image/*" class="block w-full text-sm text-gray-400
-                        file:mr-4 file:py-2 file:px-4
-                        file:rounded-md file:border-0
-                        file:text-sm file:font-semibold
-                        file:bg-blue-600 file:text-white
-                        hover:file:bg-blue-700 cursor-pointer bg-gray-900 rounded-md border border-gray-700">
+                        file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold
+                        file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer bg-gray-900 rounded-md border border-gray-700">
                 </div>
 
                 <div class="flex gap-2">
                     <button id="btnGenerateMock" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white text-xs py-2 px-3 rounded flex items-center justify-center gap-2 transition-colors">
-                        <i data-lucide="shuffle" class="w-3 h-3"></i> Generate Random Blocks
+                        <i data-lucide="shuffle" class="w-3 h-3"></i> Mock Blocks
                     </button>
                     <button id="btnClear" class="bg-red-900/50 hover:bg-red-800/80 text-red-200 text-xs py-2 px-3 rounded flex items-center justify-center transition-colors" title="Clear All">
                         <i data-lucide="trash-2" class="w-3 h-3"></i>
@@ -78,7 +67,7 @@
                 
                 <div>
                     <div class="flex justify-between text-xs mb-1">
-                        <label class="text-gray-400">Width</label>
+                        <label class="text-gray-400">Target Width</label>
                         <span id="valWidth" class="text-blue-400 font-mono">800px</span>
                     </div>
                     <input type="range" id="containerWidth" min="300" max="2400" value="800" class="w-full accent-blue-500">
@@ -86,7 +75,7 @@
 
                 <div>
                     <div class="flex justify-between text-xs mb-1">
-                        <label class="text-gray-400">Height</label>
+                        <label class="text-gray-400">Target Height</label>
                         <span id="valHeight" class="text-blue-400 font-mono">600px</span>
                     </div>
                     <input type="range" id="containerHeight" min="300" max="2000" value="600" class="w-full accent-blue-500">
@@ -95,11 +84,19 @@
 
             <hr class="border-gray-700">
 
-            <!-- Algorithm Settings -->
-            <div class="space-y-4">
+            <!-- Layout Strategy Engine -->
+            <div class="space-y-4 bg-gray-900/50 p-3 rounded-lg border border-gray-700/50">
                 <h3 class="text-sm font-semibold text-gray-300 uppercase tracking-wider flex items-center gap-2">
-                    <i data-lucide="cpu" class="w-4 h-4"></i> Algorithm Settings
+                    <i data-lucide="network" class="w-4 h-4 text-blue-400"></i> Layout Strategy
                 </h3>
+
+                <div>
+                    <select id="layoutMode" class="w-full bg-gray-800 border border-gray-600 rounded p-2 text-sm text-white focus:border-blue-500 outline-none font-semibold">
+                        <option value="justifiedRows">Justified Rows</option>
+                        <option value="justifiedColumns">Justified Columns</option>
+                    </select>
+                    <p id="modeDesc" class="text-xs text-gray-400 mt-2 leading-tight italic"></p>
+                </div>
 
                 <div>
                     <label class="block text-xs text-gray-400 mb-1">Weighting Logic</label>
@@ -119,16 +116,14 @@
                     </select>
                 </div>
 
-                <div>
+                <div class="pt-2">
                     <div class="flex justify-between text-xs mb-1">
-                        <label class="text-gray-400">Gap</label>
-                        <span id="valGap" class="text-blue-400 font-mono">2px</span>
+                        <label class="text-gray-400">Internal Gap</label>
+                        <span id="valGap" class="text-blue-400 font-mono">4px</span>
                     </div>
-                    <input type="range" id="gap" min="0" max="20" value="2" class="w-full accent-blue-500">
+                    <input type="range" id="gap" min="0" max="32" value="4" class="w-full accent-blue-500">
                 </div>
             </div>
-
-            <hr class="border-gray-700">
 
             <!-- Styling & Effects -->
             <div class="space-y-4">
@@ -180,13 +175,13 @@
                 <div id="renderCanvas" class="shadow-2xl absolute top-0 left-0 overflow-hidden ring-1 ring-gray-700 transition-transform duration-200" style="width: 800px; height: 600px; transform-origin: top left; background-color: #1f2937;">
                     <!-- Rectangles injected here via gridWrapper -->
                     <div class="absolute inset-0 flex items-center justify-center text-gray-500 text-sm italic empty-state z-50 pointer-events-none">
-                        Upload images or generate mock blocks to begin...
+                        Select a layout strategy and load images to begin.
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Floating Zoom Controls (Fixed so they never leave the viewport) -->
+        <!-- Floating Zoom Controls -->
         <div class="fixed bottom-20 right-8 flex gap-1 z-50 bg-gray-800 p-1.5 rounded-lg border border-gray-700 shadow-xl opacity-90 hover:opacity-100">
             <button id="btnZoomOut" class="p-1.5 hover:bg-gray-700 rounded text-gray-400 hover:text-white transition-colors" title="Zoom Out"><i data-lucide="zoom-out" class="w-4 h-4"></i></button>
             <span id="zoomLabel" class="flex items-center justify-center w-12 text-xs font-mono text-gray-300">100%</span>
@@ -203,13 +198,8 @@
                 </div>
                 <div class="flex items-center gap-2">
                     <i data-lucide="box" class="w-4 h-4 text-gray-500"></i>
-                    <span class="text-gray-400">Layout Height:</span>
-                    <span id="metricSpace" class="font-mono text-blue-400">Dynamic Height (Justified)</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <i data-lucide="scaling" class="w-4 h-4 text-gray-500"></i>
-                    <span class="text-gray-400">Worst Aspect Ratio:</span>
-                    <span id="metricRatio" class="font-mono text-white">N/A</span>
+                    <span class="text-gray-400">Layout Bounds:</span>
+                    <span id="metricSpace" class="font-mono text-blue-400">Waiting...</span>
                 </div>
             </div>
             <div class="flex gap-2">
@@ -226,73 +216,63 @@
     <script>
         lucide.createIcons();
 
-        // --- Core State ---
+        // --- Core State Architecture ---
         let rawItems = [];
         let calculatedLayout = [];
         let zoomLevel = 1;
+        
         const state = {
+            layoutMode: 'justifiedRows',
             width: 800,
             height: 600,
-            weighting: 'area',
-            sorting: 'desc',
-            gap: 2,
+            gap: 4,
             backgroundColor: '#1f2937',
             rotation: 0,
             borderRadius: 0,
             bookCover: 0
         };
 
-        // --- DOM Elements ---
+        const layoutDescriptions = {
+            justifiedRows: "Scales row heights slightly so every row perfectly matches the container width. The layout height expands dynamically.",
+            justifiedColumns: "Scales column widths slightly so every column perfectly matches the container height. The layout width expands dynamically."
+        };
+
         const canvas = document.getElementById('renderCanvas');
         const emptyState = document.querySelector('.empty-state');
         
-        // --- Event Listeners for Controls ---
-        const bindSlider = (id, stateKey, labelId, suffix = 'px') => {
+        // --- UI Binding & Visibility Logic ---
+        const updateUIPanels = () => {
+            document.getElementById('modeDesc').textContent = layoutDescriptions[state.layoutMode];
+            triggerLayout();
+        };
+
+        const bindControl = (id, stateKey, labelId, suffix = '') => {
             const el = document.getElementById(id);
             const label = document.getElementById(labelId);
-            el.addEventListener('input', (e) => {
-                state[stateKey] = parseInt(e.target.value);
-                label.textContent = state[stateKey] + suffix;
-                if(stateKey === 'width' || stateKey === 'height') {
-                    canvas.style.width = state.width + 'px';
-                    // Height is handled dynamically in triggerLayout
-                }
-                triggerLayout();
+            el.addEventListener(el.type === 'color' || el.tagName === 'SELECT' ? 'change' : 'input', (e) => {
+                state[stateKey] = el.tagName === 'SELECT' || el.type === 'color' ? e.target.value : parseInt(e.target.value);
+                if(label) label.textContent = state[stateKey] + suffix;
+                
+                if (stateKey === 'backgroundColor') canvas.style.backgroundColor = state.backgroundColor;
+                if (stateKey === 'layoutMode') updateUIPanels();
+                else triggerLayout();
             });
         };
 
-        const bindSelect = (id, stateKey) => {
-            document.getElementById(id).addEventListener('change', (e) => {
-                state[stateKey] = e.target.value;
-                triggerLayout();
-            });
-        };
+        bindControl('layoutMode', 'layoutMode');
+        bindControl('containerWidth', 'width', 'valWidth', 'px');
+        bindControl('containerHeight', 'height', 'valHeight', 'px');
+        bindControl('gap', 'gap', 'valGap', 'px');
+        bindControl('rotation', 'rotation', 'valRotation', '°');
+        bindControl('radius', 'borderRadius', 'valRadius', 'px');
+        bindControl('bookCover', 'bookCover', 'valBookCover', '%');
+        bindControl('bgColor', 'backgroundColor', 'valBgColor');
 
-        const bindColor = (id, stateKey, labelId) => {
-            const el = document.getElementById(id);
-            const label = document.getElementById(labelId);
-            el.addEventListener('input', (e) => {
-                state[stateKey] = e.target.value;
-                label.textContent = e.target.value.toUpperCase();
-                canvas.style.backgroundColor = state[stateKey];
-            });
-        };
-
-        bindSlider('containerWidth', 'width', 'valWidth');
-        bindSlider('containerHeight', 'height', 'valHeight');
-        bindSlider('gap', 'gap', 'valGap');
-        bindSlider('rotation', 'rotation', 'valRotation', '°');
-        bindSlider('radius', 'borderRadius', 'valRadius');
-        bindSlider('bookCover', 'bookCover', 'valBookCover', '%');
-        
-        bindColor('bgColor', 'backgroundColor', 'valBgColor');
-        
-        bindSelect('weighting', 'weighting');
-        bindSelect('sorting', 'sorting');
+        updateUIPanels();
 
         // --- Data Input Handling ---
         document.getElementById('btnGenerateMock').addEventListener('click', () => {
-            const count = Math.floor(Math.random() * 15) + 5; // 5 to 20 items
+            const count = Math.floor(Math.random() * 15) + 10; 
             const colors = ['#ef4444', '#f97316', '#f59e0b', '#84cc16', '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6', '#d946ef', '#f43f5e'];
             rawItems = Array.from({length: count}).map((_, i) => ({
                 id: `mock_${Date.now()}_${i}`,
@@ -317,17 +297,10 @@
                 return new Promise((resolve) => {
                     const url = URL.createObjectURL(file);
                     const img = new Image();
-                    img.onload = () => {
-                        resolve({
-                            id: `img_${file.name}_${Date.now()}`,
-                            type: 'image',
-                            url: url,
-                            imgElement: img,
-                            naturalWidth: img.width,
-                            naturalHeight: img.height,
-                            name: file.name
-                        });
-                    };
+                    img.onload = () => resolve({
+                        id: `img_${file.name}_${Date.now()}`, type: 'image', url: url, imgElement: img,
+                        naturalWidth: img.width, naturalHeight: img.height, name: file.name
+                    });
                     img.src = url;
                 });
             }));
@@ -336,14 +309,74 @@
             triggerLayout();
         });
 
-        // --- Core Layout Engine ---
+        // ==========================================
+        // LAYOUT ENGINE
+        // ==========================================
 
+        const layoutStrategies = {
+            justifiedRows: (items, cfg) => {
+                let layout = [], currentY = 0, row = [], i = 0;
+                while (i < items.length) {
+                    let item = items[i];
+                    let aspect = (item.naturalWidth / item.naturalHeight) || 1;
+                    row.push({...item, aspect});
+                    i++;
+                    
+                    let aspectSum = row.reduce((sum, r) => sum + r.aspect, 0);
+                    let gapWidth = Math.max(0, (row.length - 1) * cfg.gap);
+                    let availableWidth = Math.max(1, cfg.width - gapWidth);
+                    let rowHeight = availableWidth / aspectSum;
+                    
+                    if (rowHeight < cfg.height * 0.5 || i === items.length) {
+                        let currentX = 0;
+                        row.forEach(r => {
+                            let rWidth = rowHeight * r.aspect;
+                            layout.push({ ...r, x: currentX, y: currentY, w: rWidth, h: rowHeight });
+                            currentX += rWidth + cfg.gap;
+                        });
+                        currentY += rowHeight + cfg.gap;
+                        row = []; 
+                    }
+                }
+                return layout;
+            },
+
+            justifiedColumns: (items, cfg) => {
+                let layout = [], currentX = 0, col = [], i = 0;
+                while (i < items.length) {
+                    let item = items[i];
+                    let aspect = (item.naturalWidth / item.naturalHeight) || 1;
+                    col.push({...item, aspect});
+                    i++;
+                    
+                    // Instead of summing aspect ratio directly, we sum the inverse (1 / aspect) for vertical stacking
+                    let invAspectSum = col.reduce((sum, r) => sum + (1 / r.aspect), 0);
+                    let gapHeight = Math.max(0, (col.length - 1) * cfg.gap);
+                    let availableHeight = Math.max(1, cfg.height - gapHeight);
+                    let colWidth = availableHeight / invAspectSum;
+                    
+                    if (colWidth < cfg.width * 0.5 || i === items.length) {
+                        let currentY = 0;
+                        col.forEach(r => {
+                            let rHeight = colWidth / r.aspect;
+                            layout.push({ ...r, x: currentX, y: currentY, w: colWidth, h: rHeight });
+                            currentY += rHeight + cfg.gap;
+                        });
+                        currentX += colWidth + cfg.gap;
+                        col = []; 
+                    }
+                }
+                return layout;
+            }
+        };
+
+        // --- Core Execution Trigger ---
         function triggerLayout() {
             emptyState.style.display = rawItems.length ? 'none' : 'flex';
             if (rawItems.length === 0) {
                 canvas.innerHTML = '';
                 canvas.appendChild(emptyState);
-                updateMetrics([], 0);
+                updateMetrics(0, 0, 0);
                 return;
             }
 
@@ -359,75 +392,32 @@
             if (state.sorting === 'desc') processingItems.sort((a, b) => b.weight - a.weight);
             if (state.sorting === 'asc') processingItems.sort((a, b) => a.weight - b.weight);
 
-            // 3. Normalize Weights
-            const totalWeight = processingItems.reduce((sum, i) => sum + i.weight, 0);
-            const totalArea = state.width * state.height;
-            processingItems = processingItems.map(item => ({
-                ...item,
-                normalizedWeight: (item.weight / totalWeight) * totalArea
-            }));
-
-            // 4. Run Justified Algorithm passing the gap size
-            calculatedLayout = justifiedGallery(processingItems, 0, 0, state.width, state.height, state.gap);
-
-            // 5. Render
+            // 3. Strategy Execution
+            calculatedLayout = layoutStrategies[state.layoutMode](processingItems, state);
             renderLayout(calculatedLayout);
         }
 
-        // --- Layout Algorithms ---
-        // Justified Gallery (Preserves Aspect Ratios - Used by Flickr/Google Photos)
-        function justifiedGallery(items, x, y, w, h, gap = 0) {
-            let layout = [];
-            let currentY = y;
-            let row = [];
-            let i = 0;
-            
-            while (i < items.length) {
-                let item = items[i];
-                let aspect = (item.naturalWidth / item.naturalHeight) || 1;
-                row.push({...item, aspect});
-                i++;
-                
-                let aspectSum = row.reduce((sum, r) => sum + r.aspect, 0);
-                
-                // Calculate available width for images by subtracting the total gap width needed for this row
-                let gapWidth = Math.max(0, (row.length - 1) * gap);
-                let availableWidth = Math.max(1, w - gapWidth);
-                let rowHeight = availableWidth / aspectSum;
-                
-                if (rowHeight < h * 0.5 || i === items.length) {
-                    let currentX = x;
-                    row.forEach(r => {
-                        let rWidth = rowHeight * r.aspect;
-                        layout.push({ ...r, x: currentX, y: currentY, w: rWidth, h: rowHeight });
-                        currentX += rWidth + gap;
-                    });
-                    currentY += rowHeight + gap;
-                    row = []; 
-                }
-            }
-            return layout;
-        }
-
-        // --- Rendering Engine ---
+        // --- View & Render Layer ---
         function renderLayout(layoutData) {
             canvas.innerHTML = '';
             canvas.appendChild(emptyState);
-            let worstRatioVal = 0;
-            let totalRenderedArea = 0;
 
-            // Determine final height needed
+            // Calculate final bounding box required based on the selected mode
             const maxLayoutY = layoutData.length ? Math.max(...layoutData.map(r => r.y + r.h)) : state.height;
-            const layoutHeight = maxLayoutY;
+            const maxLayoutX = layoutData.length ? Math.max(...layoutData.map(r => r.x + r.w)) : state.width;
+
+            const layoutWidth = state.layoutMode === 'justifiedColumns' ? maxLayoutX : state.width;
+            const layoutHeight = state.layoutMode === 'justifiedRows' ? maxLayoutY : state.height;
+
+            canvas.style.width = `${layoutWidth}px`;
             canvas.style.height = `${layoutHeight}px`;
 
-            // Block Rotation: Calculate scale requirement to crop cleanly inside rotated whole-layout box
+            // Setup Rotational Grouping Layer
             const rad = state.rotation * Math.PI / 180;
             const cos = Math.abs(Math.cos(rad));
             const sin = Math.abs(Math.sin(rad));
-            const scaleFactor = cos + Math.max(layoutHeight / state.width, state.width / layoutHeight) * sin;
+            const scaleFactor = cos + Math.max(layoutHeight / layoutWidth, layoutWidth / layoutHeight) * sin;
 
-            // Container to rotate the entire block of rectangles natively
             const gridWrapper = document.createElement('div');
             gridWrapper.className = 'w-full h-full absolute inset-0';
             gridWrapper.style.transformOrigin = 'center';
@@ -435,106 +425,61 @@
             gridWrapper.style.transition = 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)';
 
             layoutData.forEach(rect => {
-                let ratio = Math.max(rect.w / rect.h, rect.h / rect.w);
-                if (ratio > worstRatioVal) worstRatioVal = ratio;
-                totalRenderedArea += (rect.w * rect.h);
-
                 const el = document.createElement('div');
                 el.className = 'rect-item absolute group';
-                
                 el.style.left = `${rect.x}px`;
                 el.style.top = `${rect.y}px`;
                 el.style.width = `${rect.w}px`;
                 el.style.height = `${rect.h}px`;
                 
                 const inner = document.createElement('div');
-                // Use exact calculated w/h without artificial CSS padding margins
                 inner.style.borderRadius = `${state.borderRadius}px`;
                 inner.className = `relative w-full h-full shadow-sm overflow-hidden ${rect.type === 'color' ? 'bg-gray-800' : ''} transition-transform duration-200 hover:scale-[1.02] hover:z-10 hover:shadow-lg border border-gray-700/50`;
 
                 if (rect.type === 'image') {
                     const imgContainer = document.createElement('div');
-                    imgContainer.className = 'w-full h-full relative flex items-center justify-center';
-                    
+                    imgContainer.className = 'w-full h-full relative flex items-center justify-center bg-gray-900';
                     const img = document.createElement('img');
                     img.src = rect.url;
-                    img.className = `w-full h-full object-cover`; // Since layout exactly matches aspect, this effectively means exact fit
+                    img.className = `w-full h-full object-cover`; 
                     imgContainer.appendChild(img);
                     inner.appendChild(imgContainer);
                 } else {
                     inner.style.backgroundColor = rect.color;
                 }
 
-                // Dynamic Book Cover Effect mapped to the slider
                 if (state.bookCover > 0) {
                     const overlay = document.createElement('div');
                     overlay.className = 'absolute inset-0 pointer-events-none z-10';
-                    const w = state.bookCover; // scales gradient stops dynamically
+                    const w = state.bookCover;
                     overlay.style.background = `
-                        linear-gradient(to right, 
-                            rgba(255,255,255,0.4) 0%, 
-                            rgba(0,0,0,0.2) ${w * 0.4}%, 
-                            rgba(255,255,255,0.5) ${w * 0.6}%, 
-                            rgba(0,0,0,0.1) ${w * 1.0}%, 
-                            rgba(0,0,0,0) 100%),
-                        linear-gradient(to left, 
-                            rgba(0,0,0,0.3) 0%, 
-                            rgba(0,0,0,0) ${w * 0.4}%)`;
+                        linear-gradient(to right, rgba(255,255,255,0.4) 0%, rgba(0,0,0,0.2) ${w * 0.4}%, rgba(255,255,255,0.5) ${w * 0.6}%, rgba(0,0,0,0.1) ${w * 1.0}%, rgba(0,0,0,0) 100%),
+                        linear-gradient(to left, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) ${w * 0.4}%)`;
                     inner.appendChild(overlay);
                 }
-
-                // Debug overlay
-                const debugInfo = document.createElement('div');
-                debugInfo.className = 'absolute inset-0 bg-black/70 text-white text-[10px] p-2 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-center items-center pointer-events-none text-center leading-tight font-mono z-20';
-                debugInfo.innerHTML = `
-                    <span class="font-bold truncate w-full mb-1">${rect.name || rect.id}</span>
-                    ${Math.round(rect.w)} x ${Math.round(rect.h)}<br>
-                    Ratio: ${ratio.toFixed(2)}:1
-                `;
-                inner.appendChild(debugInfo);
 
                 el.appendChild(inner);
                 gridWrapper.appendChild(el);
             });
 
             canvas.appendChild(gridWrapper);
-            updateMetrics(layoutData, worstRatioVal, totalRenderedArea);
-            updateZoom(); // Synchronize the viewport wrapper with the newly computed layout height
+            updateMetrics(layoutData.length, layoutWidth, layoutHeight);
+            updateZoom();
         }
 
-        function updateMetrics(layout, worstRatio, area) {
-            document.getElementById('metricCount').textContent = layout.length;
-            
-            const spaceEl = document.getElementById('metricSpace');
-            
-            if (layout.length === 0) {
-                spaceEl.textContent = 'N/A';
-                spaceEl.className = 'font-mono text-gray-500';
-            } else {
-                spaceEl.textContent = 'Dynamic Height (Justified)';
-                spaceEl.className = 'font-mono text-blue-400';
-            }
-
-            const ratioEl = document.getElementById('metricRatio');
-            ratioEl.textContent = layout.length ? `${worstRatio.toFixed(2)}:1` : 'N/A';
-            if(worstRatio > 4) ratioEl.className = 'font-mono text-red-400';
-            else if(worstRatio > 2) ratioEl.className = 'font-mono text-yellow-400';
-            else ratioEl.className = 'font-mono text-green-400';
+        function updateMetrics(count, width, height) {
+            document.getElementById('metricCount').textContent = count;
+            document.getElementById('metricSpace').textContent = `${Math.round(width)}px × ${Math.round(height)}px`;
         }
 
-        // --- Zoom Controls ---
         function updateZoom() {
-            const canvas = document.getElementById('renderCanvas');
             const wrapper = document.getElementById('scaleWrapper');
-            
-            // Scale the canvas visually
             canvas.style.transform = `scale(${zoomLevel})`;
             document.getElementById('zoomLabel').textContent = `${Math.round(zoomLevel * 100)}%`;
-            
-            // Adjust the invisible wrapper explicitly so scrollbars trigger seamlessly
             if (wrapper) {
+                const currentWidth = parseFloat(canvas.style.width) || state.width;
                 const currentHeight = parseFloat(canvas.style.height) || state.height;
-                wrapper.style.width = `${state.width * zoomLevel}px`;
+                wrapper.style.width = `${currentWidth * zoomLevel}px`;
                 wrapper.style.height = `${currentHeight * zoomLevel}px`;
             }
         }
@@ -547,101 +492,87 @@
             if (calculatedLayout.length === 0) return alert("Nothing to export!");
 
             const maxLayoutY = Math.max(...calculatedLayout.map(r => r.y + r.h));
-            const exportHeight = maxLayoutY;
+            const maxLayoutX = Math.max(...calculatedLayout.map(r => r.x + r.w));
+
+            const exportWidth = state.layoutMode === 'justifiedColumns' ? maxLayoutX : state.width;
+            const exportHeight = state.layoutMode === 'justifiedRows' ? maxLayoutY : state.height;
 
             const offCanvas = document.createElement('canvas');
-            offCanvas.width = state.width;
+            offCanvas.width = exportWidth;
             offCanvas.height = exportHeight;
             const ctx = offCanvas.getContext('2d');
             
             ctx.imageSmoothingEnabled = true;
             ctx.imageSmoothingQuality = 'high';
 
-            // Background Fill (Solid for JPEG, Clear for PNG for transparent padding)
             if (format === 'image/jpeg') {
                 ctx.fillStyle = state.backgroundColor; 
-                ctx.fillRect(0, 0, state.width, exportHeight);
+                ctx.fillRect(0, 0, exportWidth, exportHeight);
             } else {
-                ctx.clearRect(0, 0, state.width, exportHeight);
+                ctx.clearRect(0, 0, exportWidth, exportHeight);
             }
 
-            // Apply global block rotation / scale to context before drawing anything
             const rad = state.rotation * Math.PI / 180;
             const cos = Math.abs(Math.cos(rad));
             const sin = Math.abs(Math.sin(rad));
-            const scaleFactor = cos + Math.max(exportHeight / state.width, state.width / exportHeight) * sin;
+            const scaleFactor = cos + Math.max(exportHeight / exportWidth, exportWidth / exportHeight) * sin;
 
             ctx.save();
-            ctx.translate(state.width / 2, exportHeight / 2);
+            ctx.translate(exportWidth / 2, exportHeight / 2);
             ctx.rotate(rad);
             ctx.scale(scaleFactor, scaleFactor);
-            ctx.translate(-state.width / 2, -exportHeight / 2);
+            ctx.translate(-exportWidth / 2, -exportHeight / 2);
 
-            // Render each layout element precisely to canvas in their unrotated block format
             calculatedLayout.forEach(rect => {
-                const innerW = rect.w;
-                const innerH = rect.h;
-                const drawX = rect.x;
-                const drawY = rect.y;
-
                 ctx.save();
-                
-                // Establish clipping path for border radius
                 ctx.beginPath();
-                const maxRadius = Math.min(innerW / 2, innerH / 2, state.borderRadius);
-                if (ctx.roundRect) {
-                    ctx.roundRect(drawX, drawY, innerW, innerH, maxRadius);
-                } else {
-                    ctx.rect(drawX, drawY, innerW, innerH);
-                }
+                const maxRadius = Math.min(rect.w / 2, rect.h / 2, state.borderRadius);
+                if (ctx.roundRect) ctx.roundRect(rect.x, rect.y, rect.w, rect.h, maxRadius);
+                else ctx.rect(rect.x, rect.y, rect.w, rect.h);
                 ctx.clip();
 
                 if (rect.type === 'image' && rect.imgElement) {
                     if (format === 'image/jpeg') {
                         ctx.fillStyle = state.backgroundColor;
-                        ctx.fillRect(drawX, drawY, innerW, innerH);
-                    } // Left empty for PNG to keep padding/letterbox transparent!
+                        ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
+                    }
+                    
+                    const imgAspect = rect.imgElement.width / rect.imgElement.height;
+                    const boxAspect = rect.w / rect.h;
+                    let renderW, renderH, renderX = rect.x, renderY = rect.y;
 
-                    // With Justified layout, images perfectly fit the calculated bounds natively
-                    const renderW = innerW;
-                    const renderH = innerH;
-                    const renderX = drawX;
-                    const renderY = drawY;
-
+                    if (imgAspect > boxAspect) {
+                        renderH = rect.h;
+                        renderW = rect.h * imgAspect;
+                        renderX = rect.x + (rect.w - renderW) / 2;
+                    } else {
+                        renderW = rect.w;
+                        renderH = rect.w / imgAspect;
+                        renderY = rect.y + (rect.h - renderH) / 2;
+                    }
                     ctx.drawImage(rect.imgElement, renderX, renderY, renderW, renderH);
-
                 } else {
                     ctx.fillStyle = rect.color || '#374151';
-                    ctx.fillRect(drawX, drawY, innerW, innerH);
+                    ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
                 }
 
-                // Render Dynamic Book Cover inside the same clipped area
                 if (state.bookCover > 0) {
                     const w = state.bookCover / 100;
-                    
-                    const grad1 = ctx.createLinearGradient(drawX, drawY, drawX + innerW, drawY);
+                    const grad1 = ctx.createLinearGradient(rect.x, rect.y, rect.x + rect.w, rect.y);
                     grad1.addColorStop(0, 'rgba(255,255,255,0.4)');
                     grad1.addColorStop(Math.min(1, w * 0.4), 'rgba(0,0,0,0.2)');
                     grad1.addColorStop(Math.min(1, w * 0.6), 'rgba(255,255,255,0.5)');
                     grad1.addColorStop(Math.min(1, w * 1.0), 'rgba(0,0,0,0.1)');
                     grad1.addColorStop(1, 'rgba(0,0,0,0)');
                     ctx.fillStyle = grad1;
-                    ctx.fillRect(drawX, drawY, innerW, innerH);
-
-                    const grad2 = ctx.createLinearGradient(drawX + innerW, drawY, drawX, drawY);
-                    grad2.addColorStop(0, 'rgba(0,0,0,0.3)');
-                    grad2.addColorStop(Math.min(1, w * 0.4), 'rgba(0,0,0,0)');
-                    ctx.fillStyle = grad2;
-                    ctx.fillRect(drawX, drawY, innerW, innerH);
+                    ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
                 }
-
-                ctx.restore(); // Drop the clip path for the next rectangle
+                ctx.restore(); 
             });
 
-            ctx.restore(); // Restore global context transformation
-
+            ctx.restore(); 
             const link = document.createElement('a');
-            link.download = `treemap_layout.${ext}`;
+            link.download = `packing_layout.${ext}`;
             link.href = offCanvas.toDataURL(format, ext === 'jpg' ? 1.0 : undefined);
             link.click();
         }
